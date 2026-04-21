@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Games Click — Pakistan's indie mobile game development studio. Immersive 3D simulation and open-world Android games.">
+<title>Games Click | Mobile Game Studio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+  --bg:       #050810;
+  --bg2:      #090d1a;
+  --bg3:      #0d1225;
+  --card:     #0f1628;
+  --card2:    #131b30;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.12);
+
+  --cyan:     #00E5FF;
+  --cyan2:    #00B8D9;
+  --gold:     #FFB830;
+  --gold2:    #E6A020;
+  --red:      #FF3D5A;
+  --green:    #00E676;
+
+  --white:    #FFFFFF;
+  --gray1:    #E2E8F0;
+  --gray2:    #94A3B8;
+  --gray3:    #4A5568;
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'Outfit', sans-serif;
+
+  --radius:   14px;
+  --radius-sm:8px;
+  --glow-cyan: 0 0 40px rgba(0,229,255,0.18);
+  --glow-gold: 0 0 40px rgba(255,184,48,0.2);
+  --trans:    all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--gray1);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--cyan2); border-radius:3px; }
+
+img { max-width:100%; display:block; }
+a { text-decoration:none; color:inherit; }
+
+/* ═══════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════ */
+.container { max-width:1180px; margin:0 auto; padding:0 28px; }
+.section { padding:110px 0; }
+
+.tag {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family: var(--font-body);
+  font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+  color: var(--cyan);
+  background: rgba(0,229,255,0.08);
+  border: 1px solid rgba(0,229,255,0.2);
+  padding:7px 16px; border-radius:30px;
+  margin-bottom:20px;
+}
+
+.tag::before { content:''; width:6px; height:6px; background:var(--cyan); border-radius:50%; animation: blink 2s ease infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  line-height:1;
+  letter-spacing:2px;
+  color: var(--white);
+  margin-bottom:18px;
+}
+.heading span { color: var(--cyan); }
+.heading .gold { color: var(--gold); }
+
+.sub {
+  font-size:1.05rem; color:var(--gray2);
+  line-height:1.75; max-width:540px;
+}
+
+.section-head { margin-bottom:64px; }
+.section-head.center { text-align:center; }
+.section-head.center .sub { margin:0 auto; }
+
+/* Glow line under heading */
+.glow-line {
+  width:60px; height:3px;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+  border-radius:2px;
+  margin:20px 0 0;
+}
+.center .glow-line { margin:20px auto 0; }
+
+/* reveal */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity 0.65s ease, transform 0.65s ease; }
+.reveal.in { opacity:1; transform:translateY(0); }
+
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
+#nav {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  padding:0 28px;
+  transition: var(--trans);
+}
+#nav.solid {
+  background: rgba(5,8,16,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 4px 30px rgba(0,0,0,0.4);
+}
+.nav-inner {
+  max-width:1180px; margin:0 auto;
+  height:70px; display:flex; align-items:center; justify-content:space-between;
+}
+.logo {
+  display:flex; align-items:center; gap:12px;
+  font-family: var(--font-display);
+  font-size:1.7rem; letter-spacing:3px; color:var(--white);
+}
+.logo-box {
+  width:40px; height:40px; border-radius:10px;
+  background: linear-gradient(135deg, var(--cyan), #0066ff);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; color:#fff;
+  box-shadow: 0 0 20px rgba(0,229,255,0.35);
+}
+.logo em { color:var(--cyan); font-style:normal; }
+
+.nav-links { display:flex; align-items:center; gap:4px; list-style:none; }
+.nav-links a {
+  font-size:0.88rem; font-weight:500; letter-spacing:0.5px;
+  color:var(--gray2); padding:8px 16px; border-radius:8px;
+  transition: var(--trans);
+}
+.nav-links a:hover, .nav-links a.active { color:var(--white); background:rgba(255,255,255,0.06); }
+.nav-links .cta a {
+  background: linear-gradient(135deg, var(--cyan), #0066ff);
+  color:#000; font-weight:700; padding:9px 22px;
+  box-shadow: 0 4px 20px rgba(0,229,255,0.3);
+}
+.nav-links .cta a:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,229,255,0.4); }
+
+.hamburger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:6px; }
+.hamburger span { display:block; width:23px; height:2px; background:var(--gray1); border-radius:2px; transition: var(--trans); }
+.hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+
+.mob-nav {
+  display:none; position:fixed; top:70px; left:0; right:0; z-index:999;
+  background:rgba(5,8,16,0.97); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border); padding:16px 28px 28px;
+}
+.mob-nav.open { display:block; }
+.mob-nav a { display:block; font-size:1rem; font-weight:500; color:var(--gray2); padding:14px 0; border-bottom:1px solid var(--border); transition:var(--trans); }
+.mob-nav a:hover { color:var(--cyan); padding-left:8px; }
+.mob-nav a:last-child { border-bottom:none; }
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+#hero {
+  min-height:100vh;
+  position:relative;
+  display:flex; align-items:center;
+  padding-top:70px;
+  overflow:hidden;
+}
+
+/* Background: dark city/game-world image from Unsplash */
+.hero-bg {
+  position:absolute; inset:0; z-index:0;
+  background-image: url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=1800&q=80');
+  background-size:cover; background-position:center;
+  filter: brightness(0.25) saturate(1.4);
+}
+
+/* layered overlays for drama */
+.hero-bg::after {
+  content:'';
+  position:absolute; inset:0;
+  background:
+    linear-gradient(to right, rgba(5,8,16,0.97) 45%, rgba(5,8,16,0.3) 100%),
+    linear-gradient(to top, rgba(5,8,16,1) 0%, transparent 40%);
+}
+
+/* Animated grid */
+.hero-grid {
+  position:absolute; inset:0; z-index:1;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image: linear-gradient(to bottom, transparent, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.6) 70%, transparent);
+}
+
+/* Glowing orbs */
+.hero-orb {
+  position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; z-index:1;
+}
+.orb1 { width:500px; height:500px; top:-100px; right:5%; background:rgba(0,229,255,0.07); }
+.orb2 { width:350px; height:350px; bottom:10%; left:30%; background:rgba(255,184,48,0.06); }
+
+.hero-inner {
+  position:relative; z-index:2;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:60px; align-items:center;
+  width:100%; max-width:1180px; margin:0 auto; padding:0 28px;
+}
+
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+  color:var(--cyan); margin-bottom:24px;
+  animation: fadeUp 0.8s ease both;
+}
+.hero-eyebrow .dot { width:6px; height:6px; background:var(--cyan); border-radius:50%; animation:blink 2s infinite; }
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 6.5vw, 6rem);
+  line-height:0.95;
+  letter-spacing:3px;
+  color:var(--white);
+  margin-bottom:28px;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hero-title .line2 { color:var(--cyan); -webkit-text-stroke: 0px; display:block; }
+.hero-title .line3 {
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.4);
+  color: transparent;
+  display:block;
+}
+
+.hero-desc {
+  font-size:1.08rem; color:var(--gray2);
+  line-height:1.8; max-width:500px;
+  margin-bottom:40px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-btns { display:flex; gap:16px; flex-wrap:wrap; animation: fadeUp 0.8s 0.3s ease both; }
+
+.btn {
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--font-body); font-size:0.92rem; font-weight:600; letter-spacing:0.5px;
+  padding:14px 30px; border-radius:10px; border:none; cursor:pointer;
+  transition: var(--trans);
+}
+.btn-cyan {
+  background: linear-gradient(135deg, var(--cyan), #0077ff);
+  color:#000; font-weight:700;
+  box-shadow: 0 6px 30px rgba(0,229,255,0.3);
+}
+.btn-cyan:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,229,255,0.45); }
+
+.btn-ghost {
+  background:transparent;
+  color:var(--gray1); border:1.5px solid var(--border2);
+}
+.btn-ghost:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,229,255,0.05); }
+
+.hero-stats {
+  display:flex; gap:36px; margin-top:48px;
+  animation: fadeUp 0.8s 0.4s ease both;
+  padding-top:36px;
+  border-top:1px solid var(--border);
+}
+.hstat-num {
+  font-family:var(--font-display);
+  font-size:2.2rem; letter-spacing:2px;
+  color:var(--white); line-height:1;
+}
+.hstat-num span { color:var(--cyan); }
+.hstat-label { font-size:0.75rem; color:var(--gray3); letter-spacing:1.5px; text-transform:uppercase; margin-top:4px; }
+
+/* Hero right: game mockup collage */
+.hero-right { position:relative; display:flex; align-items:center; justify-content:center; animation: fadeUp 0.9s 0.3s ease both; }
+
+.phone-frame {
+  position:relative;
+  width:220px; height:440px;
+  background: linear-gradient(145deg, #1a2340, #0d1225);
+  border-radius:36px;
+  border:2px solid rgba(0,229,255,0.25);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(0,229,255,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
+  overflow:hidden;
+  z-index:2;
+}
+.phone-screen {
+  position:absolute; inset:8px;
+  border-radius:28px; overflow:hidden;
+  background:var(--bg);
+}
+.phone-screen img { width:100%; height:100%; object-fit:cover; }
+
+/* Floating game icons around phone */
+.float-icon {
+  position:absolute;
+  border-radius:20px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
+  overflow:hidden;
+  animation: floatAnim 4s ease-in-out infinite;
+  z-index:3;
+}
+.float-icon img { width:100%; height:100%; object-fit:cover; display:block; }
+
+.fi1 { width:80px; height:80px; top:30px; left:-30px; animation-delay:0s; border-radius:18px; }
+.fi2 { width:72px; height:72px; top:80px; right:-20px; animation-delay:1s; border-radius:16px; }
+.fi3 { width:68px; height:68px; bottom:120px; left:-40px; animation-delay:2s; border-radius:16px; }
+.fi4 { width:76px; height:76px; bottom:60px; right:-20px; animation-delay:1.5s; border-radius:18px; }
+
+@keyframes floatAnim {
+  0%,100% { transform:translateY(0) rotate(-1deg); }
+  50% { transform:translateY(-12px) rotate(1deg); }
+}
+
+/* Rating badge floating */
+.hero-badge-float {
+  position:absolute; top:10px; right:10%;
+  background:rgba(255,184,48,0.15); border:1px solid rgba(255,184,48,0.3);
+  backdrop-filter:blur(12px);
+  border-radius:12px; padding:10px 16px;
+  display:flex; align-items:center; gap:8px;
+  animation: floatAnim 3.5s ease-in-out infinite;
+  z-index:4;
+}
+.hero-badge-float .star-row { color:var(--gold); font-size:12px; }
+.hero-badge-float .badge-text { font-size:0.78rem; font-weight:600; color:var(--gold); }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(30px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ═══════════════════════════════════════
+   TICKER
+═══════════════════════════════════════ */
+#ticker {
+  background:linear-gradient(90deg, var(--bg3), var(--card), var(--bg3));
+  border-top:1px solid rgba(0,229,255,0.15);
+  border-bottom:1px solid rgba(0,229,255,0.15);
+  height:54px; overflow:hidden;
+  display:flex; align-items:center;
+}
+.ticker-wrap { display:flex; white-space:nowrap; animation:ticker 35s linear infinite; }
+.ticker-item {
+  display:inline-flex; align-items:center; gap:12px;
+  font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase;
+  color:rgba(255,255,255,0.5); padding:0 40px;
+}
+.ticker-item .ti-dot { color:var(--cyan); font-size:20px; line-height:1; }
+@keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ═══════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════ */
+#about { background:var(--bg2); }
+.about-grid { display:grid; grid-template-columns:1fr 1.1fr; gap:80px; align-items:center; }
+
+.stats-2x2 { display:grid; grid-template-columns:1fr 1fr; gap:2px; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); }
+.sc {
+  background:var(--card);
+  padding:32px 28px;
+  transition:var(--trans);
+  position:relative; overflow:hidden;
+}
+.sc::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--cyan), transparent);
+  opacity:0; transition:var(--trans);
+}
+.sc:nth-child(2)::before { background:linear-gradient(90deg, var(--gold), transparent); }
+.sc:nth-child(3)::before { background:linear-gradient(90deg, #a855f7, transparent); }
+.sc:nth-child(4)::before { background:linear-gradient(90deg, var(--green), transparent); }
+.sc:hover::before { opacity:1; }
+.sc:hover { background:var(--card2); }
+
+.sc-num {
+  font-family:var(--font-display);
+  font-size:3.2rem; letter-spacing:2px;
+  line-height:1; margin-bottom:8px;
+}
+.sc:nth-child(1) .sc-num { color:var(--cyan); }
+.sc:nth-child(2) .sc-num { color:var(--gold); }
+.sc:nth-child(3) .sc-num { color:#a855f7; }
+.sc:nth-child(4) .sc-num { color:var(--green); }
+
+.sc-label { font-size:0.82rem; color:var(--gray3); line-height:1.4; }
+
+.about-text {}
+.about-p { font-size:1rem; color:var(--gray2); line-height:1.85; margin-bottom:18px; }
+
+.play-link {
+  display:inline-flex; align-items:center; gap:14px;
+  background:var(--card2); border:1px solid var(--border2);
+  padding:16px 24px; border-radius:14px; margin-top:12px;
+  transition: var(--trans);
+}
+.play-link:hover { border-color:var(--cyan); background:rgba(0,229,255,0.05); transform:translateY(-2px); }
+.play-link .pl-icon { font-size:1.6rem; color:var(--green); }
+.play-link .pl-text .pl-sub { font-size:0.7rem; color:var(--gray3); text-transform:uppercase; letter-spacing:1px; }
+.play-link .pl-text .pl-main { font-size:0.95rem; font-weight:600; color:var(--white); }
+
+/* ═══════════════════════════════════════
+   SERVICES
+═══════════════════════════════════════ */
+#services { background:var(--bg); }
+.svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); }
+.svc-card {
+  background:var(--card);
+  padding:36px 32px;
+  transition: var(--trans);
+  position:relative; overflow:hidden; cursor:default;
+}
+.svc-card::after {
+  content:''; position:absolute;
+  bottom:0; left:0; right:0; height:2px;
+  background:var(--cyan);
+  transform:scaleX(0); transform-origin:left;
+  transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.svc-card:nth-child(2)::after { background:var(--gold); }
+.svc-card:nth-child(3)::after { background:#a855f7; }
+.svc-card:nth-child(4)::after { background:var(--red); }
+.svc-card:nth-child(5)::after { background:var(--green); }
+.svc-card:nth-child(6)::after { background:#f59e0b; }
+.svc-card:hover::after { transform:scaleX(1); }
+.svc-card:hover { background:var(--card2); }
+
+.svc-icon-wrap {
+  width:54px; height:54px; border-radius:14px;
+  background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.15);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:22px; transition:var(--trans);
+}
+.svc-card:nth-child(2) .svc-icon-wrap { background:rgba(255,184,48,0.08); border-color:rgba(255,184,48,0.15); }
+.svc-card:nth-child(3) .svc-icon-wrap { background:rgba(168,85,247,0.08); border-color:rgba(168,85,247,0.15); }
+.svc-card:nth-child(4) .svc-icon-wrap { background:rgba(255,61,90,0.08); border-color:rgba(255,61,90,0.15); }
+.svc-card:nth-child(5) .svc-icon-wrap { background:rgba(0,230,118,0.08); border-color:rgba(0,230,118,0.15); }
+.svc-card:nth-child(6) .svc-icon-wrap { background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.15); }
+
+.svc-icon-wrap img { width:28px; height:28px; object-fit:contain; }
+.svc-card:hover .svc-icon-wrap { transform:scale(1.1); }
+
+.svc-title { font-size:1.05rem; font-weight:700; color:var(--white); margin-bottom:10px; }
+.svc-desc { font-size:0.88rem; color:var(--gray3); line-height:1.7; }
+
+/* ═══════════════════════════════════════
+   TOOLS
+═══════════════════════════════════════ */
+#tools { background:var(--bg2); }
+.tools-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+.tool-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:28px 16px 22px;
+  text-align:center; transition:var(--trans); cursor:default;
+}
+.tool-card:hover {
+  border-color:rgba(0,229,255,0.3);
+  background:var(--card2);
+  transform:translateY(-5px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.3), var(--glow-cyan);
+}
+.tool-img { width:52px; height:52px; object-fit:contain; margin:0 auto 14px; }
+.tool-name { font-size:0.88rem; font-weight:600; color:var(--gray1); margin-bottom:3px; }
+.tool-cat { font-size:0.72rem; color:var(--gray3); letter-spacing:1px; text-transform:uppercase; }
+
+/* ═══════════════════════════════════════
+   PORTFOLIO
+═══════════════════════════════════════ */
+#portfolio { background:var(--bg); }
+
+.portfolio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+
+.game-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:18px; overflow:hidden;
+  transition:var(--trans); cursor:pointer;
+  position:relative;
+}
+.game-card::before {
+  content:''; position:absolute; inset:0; z-index:0;
+  background:linear-gradient(135deg, rgba(0,229,255,0.03), transparent);
+  opacity:0; transition:var(--trans);
+}
+.game-card:hover::before { opacity:1; }
+.game-card:hover {
+  border-color:rgba(0,229,255,0.25);
+  transform:translateY(-8px);
+  box-shadow:0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,229,255,0.1);
+}
+
+.gc-banner {
+  height:140px; position:relative; overflow:hidden;
+  background:linear-gradient(135deg, var(--bg3), var(--card2));
+}
+.gc-banner img { width:100%; height:100%; object-fit:cover; filter:brightness(0.7) saturate(1.2); }
+.gc-banner-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to bottom, transparent 30%, var(--card) 100%);
+}
+
+.gc-icon-wrap {
+  position:absolute; bottom:-22px; left:20px;
+  width:56px; height:56px; border-radius:14px;
+  overflow:hidden; border:2px solid var(--card);
+  box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:2;
+}
+.gc-icon-wrap img { width:100%; height:100%; object-fit:cover; }
+
+.gc-body { padding:32px 20px 20px; position:relative; z-index:1; }
+.gc-genre {
+  display:inline-block;
+  font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  color:var(--cyan); background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.2);
+  padding:3px 10px; border-radius:20px; margin-bottom:8px;
+}
+.gc-genre.action { color:var(--red); background:rgba(255,61,90,0.1); border-color:rgba(255,61,90,0.2); }
+
+.gc-title { font-size:1rem; font-weight:700; color:var(--white); margin-bottom:6px; line-height:1.3; }
+.gc-rating { display:flex; align-items:center; gap:6px; margin-bottom:12px; }
+.gc-rating .stars { color:var(--gold); font-size:11px; }
+.gc-rating .rnum { font-size:0.8rem; color:var(--gray2); }
+.gc-new { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--gold); background:rgba(255,184,48,0.1); border:1px solid rgba(255,184,48,0.2); padding:3px 8px; border-radius:20px; }
+
+.gc-desc {
+  font-size:0.85rem; color:var(--gray3); line-height:1.65;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  margin-bottom:18px;
+}
+.gc-btn {
+  width:100%; padding:11px; border-radius:10px;
+  background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.2);
+  color:var(--cyan); font-family:var(--font-body); font-size:0.85rem; font-weight:600;
+  cursor:pointer; transition:var(--trans);
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.gc-btn:hover { background:var(--cyan); color:#000; border-color:var(--cyan); }
+
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
+.modal-bg {
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,0.85); backdrop-filter:blur(10px);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+  opacity:0; visibility:hidden; transition:opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-bg.show { opacity:1; visibility:visible; }
+.modal {
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:22px; width:100%; max-width:840px; max-height:90vh;
+  overflow-y:auto; position:relative;
+  transform:scale(0.94) translateY(20px);
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-bg.show .modal { transform:scale(1) translateY(0); }
+
+.modal-close {
+  position:absolute; top:16px; right:16px; z-index:10;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(255,255,255,0.06); border:1px solid var(--border);
+  color:var(--gray2); font-size:1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:var(--trans);
+}
+.modal-close:hover { background:var(--red); color:#fff; border-color:var(--red); }
+
+.modal-head {
+  padding:30px 32px 24px;
+  display:flex; align-items:center; gap:20px;
+  border-bottom:1px solid var(--border);
+}
+.modal-icon { width:76px; height:76px; border-radius:18px; overflow:hidden; flex-shrink:0; box-shadow:0 8px 24px rgba(0,0,0,0.4); }
+.modal-icon img { width:100%; height:100%; object-fit:cover; }
+.modal-title { font-family:var(--font-display); font-size:1.7rem; letter-spacing:2px; color:var(--white); margin-bottom:8px; }
+.modal-badges { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+.modal-body { padding:28px 32px 32px; }
+
+.shots-row { display:flex; gap:12px; overflow-x:auto; padding-bottom:12px; margin-bottom:28px; }
+.shots-row::-webkit-scrollbar { height:4px; }
+.shots-row::-webkit-scrollbar-thumb { background:var(--cyan2); border-radius:2px; }
+.shot { flex-shrink:0; width:260px; height:146px; border-radius:10px; overflow:hidden; border:1px solid var(--border); }
+.shot img { width:100%; height:100%; object-fit:cover; }
+
+.modal-section-title { font-size:0.75rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--cyan); margin-bottom:12px; }
+.modal-desc-text { font-size:0.92rem; color:var(--gray2); line-height:1.8; margin-bottom:24px; }
+
+.feature-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:28px; }
+.feat { display:flex; align-items:center; gap:10px; font-size:0.87rem; color:var(--gray2); }
+.feat i { color:var(--green); font-size:0.75rem; }
+
+.modal-dl {
+  display:flex; align-items:center; justify-content:center; gap:14px;
+  background:linear-gradient(135deg, #00c853, #00e676);
+  color:#000; font-family:var(--font-body); font-size:1rem; font-weight:700;
+  padding:17px 32px; border-radius:14px;
+  width:100%; transition:var(--trans);
+}
+.modal-dl:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(0,230,118,0.35); }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+#footer {
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:80px 0 0;
+}
+.ft-grid { display:grid; grid-template-columns:1.5fr 1fr 1.2fr 1.2fr; gap:48px; padding-bottom:60px; border-bottom:1px solid var(--border); }
+
+.ft-brand .logo { margin-bottom:16px; }
+.ft-tagline { font-size:0.9rem; color:var(--gray3); line-height:1.75; margin-bottom:24px; }
+.ft-socials { display:flex; gap:10px; }
+.ft-socials a {
+  width:38px; height:38px; border-radius:10px;
+  background:var(--card); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--gray3); font-size:0.9rem; transition:var(--trans);
+}
+.ft-socials a:hover { background:var(--cyan); color:#000; border-color:var(--cyan); box-shadow:0 0 20px rgba(0,229,255,0.3); }
+
+.ft-col h5 {
+  font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:var(--gray3); margin-bottom:22px;
+}
+.ft-links { list-style:none; }
+.ft-links li { margin-bottom:12px; }
+.ft-links a { font-size:0.88rem; color:var(--gray3); transition:var(--trans); display:flex; align-items:center; gap:6px; }
+.ft-links a:hover { color:var(--cyan); padding-left:4px; }
+
+.ft-contact-item { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ft-contact-item i { color:var(--cyan); font-size:0.85rem; margin-top:3px; }
+.ft-contact-item a, .ft-contact-item span { font-size:0.87rem; color:var(--gray3); transition:var(--trans); }
+.ft-contact-item a:hover { color:var(--cyan); }
+
+.ft-bottom { padding:20px 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.ft-bottom p { font-size:0.8rem; color:var(--gray3); }
+.ft-bottom span { color:var(--cyan); }
+
+/* ═══════════════════════════════════════
+   SCROLL TOP
+═══════════════════════════════════════ */
+#toTop {
+  position:fixed; bottom:28px; right:28px; z-index:500;
+  width:44px; height:44px; border-radius:12px;
+  background:var(--card); border:1px solid var(--border);
+  color:var(--cyan); font-size:1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; transform:translateY(10px);
+  transition:var(--trans);
+}
+#toTop.show { opacity:1; visibility:visible; transform:translateY(0); }
+#toTop:hover { background:var(--cyan); color:#000; border-color:var(--cyan); box-shadow:0 0 24px rgba(0,229,255,0.4); }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:1024px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .svc-grid{grid-template-columns:repeat(2,1fr)}
+  .tools-grid{grid-template-columns:repeat(4,1fr)}
+  .portfolio-grid{grid-template-columns:repeat(2,1fr)}
+  .ft-grid{grid-template-columns:1fr 1fr; gap:36px}
+  .hero-inner{grid-template-columns:1fr; text-align:center}
+  .hero-desc{max-width:none}
+  .hero-right{display:none}
+  .hero-btns{justify-content:center}
+  .hero-stats{justify-content:center}
+}
+@media(max-width:768px){
+  .section{padding:70px 0}
+  .about-grid{grid-template-columns:1fr; gap:40px}
+  .svc-grid{grid-template-columns:1fr}
+  .tools-grid{grid-template-columns:repeat(3,1fr)}
+  .portfolio-grid{grid-template-columns:1fr}
+  .ft-grid{grid-template-columns:1fr}
+  .ft-bottom{flex-direction:column; text-align:center}
+  .modal-head{flex-direction:column; text-align:center}
+  .feature-grid{grid-template-columns:1fr}
+  .modal-body{padding:20px}
+  .modal-head{padding:24px 20px}
+  .stats-2x2{grid-template-columns:1fr 1fr}
+  .hero-stats{gap:24px; flex-wrap:wrap; justify-content:center}
+}
+@media(max-width:500px){
+  .tools-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-2x2{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="logo">
+      <div class="logo-box"><i class="fa-solid fa-gamepad"></i></div>
+      GAMES<em>CLICK</em>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#footer">Contact</a></li>
+      <li class="cta"><a href="https://play.google.com/store/apps/developer?id=Games+Click" target="_blank"><i class="fa-brands fa-google-play"></i> Play Store</a></li>
+    </ul>
+    <button class="hamburger" id="hbg" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mob-nav" id="mobNav">
+  <a href="#about" onclick="closeMob()">About</a>
+  <a href="#services" onclick="closeMob()">Services</a>
+  <a href="#tools" onclick="closeMob()">Tools</a>
+  <a href="#portfolio" onclick="closeMob()">Portfolio</a>
+  <a href="#footer" onclick="closeMob()">Contact</a>
+  <a href="https://play.google.com/store/apps/developer?id=Games+Click" target="_blank">🎮 View on Play Store</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+
+  <div class="hero-inner">
+    <!-- Left -->
+    <div>
+      <div class="hero-eyebrow"><div class="dot"></div>Pakistan's Indie Game Studio 🇵🇰</div>
+      <h1 class="hero-title">
+        WE BUILD<br>
+        <span class="line2">GAMES THAT</span>
+        <span class="line3">MOVE YOU</span>
+      </h1>
+      <p class="hero-desc">Games Click is a passionate mobile game development studio crafting immersive 3D simulation and open-world experiences for Android. From realistic car simulators to epic crime adventures — we build games players love.</p>
+      <div class="hero-btns">
+        <a href="#portfolio" class="btn btn-cyan"><i class="fa-solid fa-gamepad"></i> Explore Games</a>
+        <a href="#footer" class="btn btn-ghost"><i class="fa-regular fa-envelope"></i> Get In Touch</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hstat-num">5<span>+</span></div>
+          <div class="hstat-label">Games Published</div>
+        </div>
+        <div>
+          <div class="hstat-num">10K<span>+</span></div>
+          <div class="hstat-label">Downloads</div>
+        </div>
+        <div>
+          <div class="hstat-num">4.0<span>★</span></div>
+          <div class="hstat-label">Avg Rating</div>
+        </div>
+        <div>
+          <div class="hstat-num">3<span>+</span></div>
+          <div class="hstat-label">Years Active</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Phone mockup -->
+    <div class="hero-right">
+      <div class="hero-badge-float">
+        <div>
+          <div class="star-row">★★★★☆</div>
+          <div class="badge-text">4.0 Play Store</div>
+        </div>
+      </div>
+
+      <!-- Floating game icons -->
+      <div class="float-icon fi1">
+        <img src="https://play-lh.googleusercontent.com/CrodYYbECbGigKuu12rO6VmRJMt4el4MxhqRS3RVio36ktvsO_TFpMSEBK_1EbkpdJaWUAMyAK1B6sGBvCxumz0=s256" alt="Car Sim">
+      </div>
+      <div class="float-icon fi2">
+        <img src="https://play-lh.googleusercontent.com/5Gke2mNpGNsHnWBWP6gCUSOlz2ddTd4Rfib6TaxalffB-c3nEUJDZBYoztVnY-9n_N8=s256" alt="Flight">
+      </div>
+      <div class="float-icon fi3">
+        <img src="https://play-lh.googleusercontent.com/PDahMCIqfZAWHieEO575qNNwpWjrYekIT3UFjvTsjQy7IfHTP5_IiGr60ztbybrGAQ=s256" alt="Truck">
+      </div>
+      <div class="float-icon fi4">
+        <img src="https://play-lh.googleusercontent.com/Kg_gabwOgpE4kz58iHTwe-pCgN8nBop-s8PIBC1NiMSvFuxRVkRnXQXvLH3DGRlMfw=s256" alt="Gangster">
+      </div>
+
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <img src="https://play-lh.googleusercontent.com/Bwibm7wd11gdUhx1vjq3zySciOzcBXPk8DFuDB9vQKuAMTDPX0SUeCHT7B074dsPofNl=w526-h296" alt="Game Screenshot">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div id="ticker">
+  <div class="ticker-wrap">
+    <span class="ticker-item"><span class="ti-dot">•</span> 5+ Android Games Published</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> ⭐ 4.0 Star Rated</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> 10,000+ Downloads Worldwide</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> Simulation Specialists</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> Flight · Car · Truck · Gangster Games</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> 🇵🇰 Proudly Made in Pakistan</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> Unity 3D Powered</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> 100% Offline Gameplay</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> Global Players Community</span>
+    <!-- Duplicate -->
+    <span class="ticker-item"><span class="ti-dot">•</span> 5+ Android Games Published</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> ⭐ 4.0 Star Rated</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> 10,000+ Downloads Worldwide</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> Simulation Specialists</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> Flight · Car · Truck · Gangster Games</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> 🇵🇰 Proudly Made in Pakistan</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> Unity 3D Powered</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> 100% Offline Gameplay</span>
+    <span class="ticker-item"><span class="ti-dot">•</span> Global Players Community</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="stats-2x2 reveal">
+        <div class="sc"><div class="sc-num">5+</div><div class="sc-label">Games Published<br>on Google Play</div></div>
+        <div class="sc"><div class="sc-num">10K+</div><div class="sc-label">Total Downloads<br>Worldwide</div></div>
+        <div class="sc"><div class="sc-num">4.0★</div><div class="sc-label">Average Player<br>Rating</div></div>
+        <div class="sc"><div class="sc-num">3+</div><div class="sc-label">Years of Active<br>Development</div></div>
+      </div>
+      <div class="reveal">
+        <span class="tag">Who Are We</span>
+        <h2 class="heading">A SMALL STUDIO<br>WITH <span>BIG DREAMS</span></h2>
+        <div class="glow-line"></div>
+        <br>
+        <p class="about-p">Games Click is an independent mobile game development studio based in Pakistan. We are a dedicated team of developers, designers, and 3D artists passionate about creating high-quality simulation and open-world gaming experiences for Android users worldwide.</p>
+        <p class="about-p">Our games are built with Unity 3D, designed for smooth offline gameplay, and crafted to deliver real fun — from city car simulators and flight games to open-world gangster adventures. We believe great games don't need a big budget — they need passion, creativity, and attention to detail.</p>
+        <a href="https://play.google.com/store/apps/developer?id=Games+Click" target="_blank" class="play-link">
+          <i class="fa-brands fa-google-play pl-icon"></i>
+          <div class="pl-text">
+            <div class="pl-sub">Available on</div>
+            <div class="pl-main">Google Play Store</div>
+          </div>
+          <i class="fa-solid fa-arrow-right" style="color:var(--gray3); font-size:0.8rem; margin-left:auto;"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="section">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="tag">What We Do</span>
+      <h2 class="heading">OUR <span>SERVICES</span></h2>
+      <div class="glow-line"></div>
+      <br>
+      <p class="sub">From concept to Play Store launch — every layer of game development handled with precision.</p>
+    </div>
+    <div class="svc-grid reveal">
+      <div class="svc-card">
+        <div class="svc-icon-wrap">
+          <img src="https://cdn.cdnlogo.com/logos/u/48/unity.svg" alt="Unity" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-code\' style=\'color:var(--cyan);font-size:22px;\'></i>'">
+        </div>
+        <div class="svc-title">Game Development</div>
+        <p class="svc-desc">Full-cycle Android game development using Unity 3D — from initial concept and mechanics to final build, testing, and Play Store deployment.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon-wrap">
+          <img src="https://cdn.cdnlogo.com/logos/f/43/figma.svg" alt="Figma" onerror="this.parentElement.innerHTML='<i class=\'fa-brands fa-figma\' style=\'color:var(--gold);font-size:22px;\'></i>'">
+        </div>
+        <div class="svc-title">UI/UX Design</div>
+        <p class="svc-desc">Intuitive, visually stunning in-game interfaces. We design HUDs, menus, loading screens, and dashboards that enhance every gaming session.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon-wrap">
+          <img src="https://cdn.cdnlogo.com/logos/b/21/blender.svg" alt="Blender" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-cube\' style=\'color:#a855f7;font-size:22px;\'></i>'">
+        </div>
+        <div class="svc-title">3D Modeling & Animation</div>
+        <p class="svc-desc">High-quality 3D vehicles, characters, and environments built in Blender — imported into Unity for realistic, immersive gameplay.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon-wrap">
+          <img src="https://img.icons8.com/color/96/map.png" alt="Level Design" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-map\' style=\'color:var(--red);font-size:22px;\'></i>'">
+        </div>
+        <div class="svc-title">Open World & Level Design</div>
+        <p class="svc-desc">Crafting detailed open-world environments, mission structures, and city layouts that keep players engaged and continuously exploring.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon-wrap">
+          <img src="https://img.icons8.com/color/96/physics.png" alt="Physics" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-gears\' style=\'color:var(--green);font-size:22px;\'></i>'">
+        </div>
+        <div class="svc-title">Game Mechanics & Physics</div>
+        <p class="svc-desc">Realistic vehicle physics, collision systems, AI behavior, and smooth gameplay controls — making every interaction feel natural and satisfying.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon-wrap">
+          <img src="https://img.icons8.com/color/96/google-play.png" alt="Play Store" onerror="this.parentElement.innerHTML='<i class=\'fa-brands fa-google-play\' style=\'color:#f59e0b;font-size:22px;\'></i>'">
+        </div>
+        <div class="svc-title">Play Store Publishing & ASO</div>
+        <p class="svc-desc">End-to-end Google Play publishing including store listing optimization, screenshots, and App Store Optimization for maximum visibility.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools" class="section">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="tag">Our Stack</span>
+      <h2 class="heading">TOOLS WE <span>USE</span></h2>
+      <div class="glow-line"></div>
+      <br>
+      <p class="sub">Industry-standard tools powering every game — from concept art to Play Store launch.</p>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://cdn.cdnlogo.com/logos/u/48/unity.svg" alt="Unity" onerror="this.src='https://img.icons8.com/color/96/unity.png'">
+        <div class="tool-name">Unity 3D</div>
+        <div class="tool-cat">Game Engine</div>
+      </div>
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://cdn.cdnlogo.com/logos/b/21/blender.svg" alt="Blender" onerror="this.src='https://img.icons8.com/color/96/blender-3d.png'">
+        <div class="tool-name">Blender</div>
+        <div class="tool-cat">3D Modeling</div>
+      </div>
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://img.icons8.com/color/96/adobe-photoshop.png" alt="Photoshop">
+        <div class="tool-name">Photoshop</div>
+        <div class="tool-cat">Texture & Art</div>
+      </div>
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://cdn.cdnlogo.com/logos/f/43/figma.svg" alt="Figma" onerror="this.src='https://img.icons8.com/color/96/figma.png'">
+        <div class="tool-name">Figma</div>
+        <div class="tool-cat">UI/UX Design</div>
+      </div>
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://img.icons8.com/color/96/android-studio--v3.png" alt="Android Studio">
+        <div class="tool-name">Android Studio</div>
+        <div class="tool-cat">Build & Deploy</div>
+      </div>
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://img.icons8.com/color/96/visual-studio.png" alt="Visual Studio">
+        <div class="tool-name">Visual Studio</div>
+        <div class="tool-cat">C# Scripting</div>
+      </div>
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://img.icons8.com/color/96/autodesk-maya.png" alt="Maya">
+        <div class="tool-name">Maya</div>
+        <div class="tool-cat">Advanced 3D</div>
+      </div>
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://img.icons8.com/color/96/adobe-substance-painter.png" alt="Substance" onerror="this.src='https://img.icons8.com/color/96/paint-palette.png'">
+        <div class="tool-name">Substance</div>
+        <div class="tool-cat">PBR Texturing</div>
+      </div>
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://cdn.cdnlogo.com/logos/g/69/github-icon.svg" alt="GitHub" onerror="this.src='https://img.icons8.com/ios-glyphs/96/github.png'">
+        <div class="tool-name">GitHub</div>
+        <div class="tool-cat">Version Control</div>
+      </div>
+      <div class="tool-card reveal">
+        <img class="tool-img" src="https://img.icons8.com/color/96/google-play.png" alt="Play Console">
+        <div class="tool-name">Play Console</div>
+        <div class="tool-cat">Publishing</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" class="section">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="tag">Our Games</span>
+      <h2 class="heading">GAME <span>PORTFOLIO</span></h2>
+      <div class="glow-line"></div>
+      <br>
+      <p class="sub">5 published titles on Google Play — each crafted with passion and built for real fun.</p>
+    </div>
+    <div class="portfolio-grid">
+
+      <!-- Game 1 -->
+      <div class="game-card reveal" onclick="openM('m1')">
+        <div class="gc-banner">
+          <img src="https://play-lh.googleusercontent.com/oHUR91Kl7h1vuBqTQpjhIjxN-bU1oQWbq4qgOH51Tu2RQDqUhzPazVA6wktqU6TR0L8=w526-h296" alt="Car Sim">
+          <div class="gc-banner-overlay"></div>
+          <div class="gc-icon-wrap">
+            <img src="https://play-lh.googleusercontent.com/CrodYYbECbGigKuu12rO6VmRJMt4el4MxhqRS3RVio36ktvsO_TFpMSEBK_1EbkpdJaWUAMyAK1B6sGBvCxumz0=s256" alt="icon">
+          </div>
+        </div>
+        <div class="gc-body">
+          <div class="gc-genre">Simulation</div>
+          <div class="gc-title">Car Simulator Open World 3D</div>
+          <div class="gc-rating"><span class="gc-new">✨ New Release</span></div>
+          <p class="gc-desc">Massive open-world city, multiple vehicles, phone call missions. Drive freely — 100% offline.</p>
+          <button class="gc-btn"><i class="fa-solid fa-eye"></i> See More</button>
+        </div>
+      </div>
+
+      <!-- Game 2 -->
+      <div class="game-card reveal" onclick="openM('m2')">
+        <div class="gc-banner">
+          <img src="https://play-lh.googleusercontent.com/uUK3ZyclJAGjY2IjOV-vdBViDI07AB0FSZ_vfJwaC5dIDFMf8gq91NerBdU0qp5E8oQkrwyLyryw0spKMFxQDg=w526-h296" alt="Flight">
+          <div class="gc-banner-overlay"></div>
+          <div class="gc-icon-wrap">
+            <img src="https://play-lh.googleusercontent.com/5Gke2mNpGNsHnWBWP6gCUSOlz2ddTd4Rfib6TaxalffB-c3nEUJDZBYoztVnY-9n_N8=s256" alt="icon">
+          </div>
+        </div>
+        <div class="gc-body">
+          <div class="gc-genre">Simulation</div>
+          <div class="gc-title">Flight Simulator: Plane Games</div>
+          <div class="gc-rating"><span class="stars">★★★★☆</span><span class="rnum">4.0</span></div>
+          <p class="gc-desc">Worldwide airports, dynamic weather, emergency landings, real cockpit controls. Fly offline.</p>
+          <button class="gc-btn"><i class="fa-solid fa-eye"></i> See More</button>
+        </div>
+      </div>
+
+      <!-- Game 3 -->
+      <div class="game-card reveal" onclick="openM('m3')">
+        <div class="gc-banner">
+          <img src="https://play-lh.googleusercontent.com/Bwibm7wd11gdUhx1vjq3zySciOzcBXPk8DFuDB9vQKuAMTDPX0SUeCHT7B074dsPofNl=w526-h296" alt="Gangster">
+          <div class="gc-banner-overlay"></div>
+          <div class="gc-icon-wrap">
+            <img src="https://play-lh.googleusercontent.com/Kg_gabwOgpE4kz58iHTwe-pCgN8nBop-s8PIBC1NiMSvFuxRVkRnXQXvLH3DGRlMfw=s256" alt="icon">
+          </div>
+        </div>
+        <div class="gc-body">
+          <div class="gc-genre action">Action</div>
+          <div class="gc-title">Open World Gangster Vegas Crime</div>
+          <div class="gc-rating"><span class="stars">★★★★☆</span><span class="rnum">3.9 · 10K+ Downloads</span></div>
+          <p class="gc-desc">Enter Gangstar Vegas. Play as Harry, build your criminal empire through 5 thrilling missions.</p>
+          <button class="gc-btn"><i class="fa-solid fa-eye"></i> See More</button>
+        </div>
+      </div>
+
+      <!-- Game 4 -->
+      <div class="game-card reveal" onclick="openM('m4')">
+        <div class="gc-banner" style="background:linear-gradient(135deg,#1a2040,#0d1830);">
+          <img src="https://play-lh.googleusercontent.com/PDahMCIqfZAWHieEO575qNNwpWjrYekIT3UFjvTsjQy7IfHTP5_IiGr60ztbybrGAQ=s256" alt="Truck" style="width:80px;height:80px;object-fit:cover;margin:30px auto;border-radius:18px;">
+          <div class="gc-banner-overlay"></div>
+          <div class="gc-icon-wrap">
+            <img src="https://play-lh.googleusercontent.com/PDahMCIqfZAWHieEO575qNNwpWjrYekIT3UFjvTsjQy7IfHTP5_IiGr60ztbybrGAQ=s256" alt="icon">
+          </div>
+        </div>
+        <div class="gc-body">
+          <div class="gc-genre">Simulation</div>
+          <div class="gc-title">Cargo Truck Simulator Game</div>
+          <div class="gc-rating"><span class="stars">★★★★☆</span><span class="rnum">3.7</span></div>
+          <p class="gc-desc">Heavy cargo trucks, challenging delivery routes, realistic truck physics. Drive offline.</p>
+          <button class="gc-btn"><i class="fa-solid fa-eye"></i> See More</button>
+        </div>
+      </div>
+
+      <!-- Game 5 -->
+      <div class="game-card reveal" onclick="openM('m5')">
+        <div class="gc-banner" style="background:linear-gradient(135deg,#0d1a30,#1a2540);">
+          <img src="https://play-lh.googleusercontent.com/vGysKoSVIXY4cYD8ui3hob38gd80tjqFVrzGj9wgNtLXYWUye779nQR42-9qp71xCG9xhNmVEujzMM8SAc1Kh-U=s256" alt="Taxi" style="width:80px;height:80px;object-fit:cover;margin:30px auto;border-radius:18px;">
+          <div class="gc-banner-overlay"></div>
+          <div class="gc-icon-wrap">
+            <img src="https://play-lh.googleusercontent.com/vGysKoSVIXY4cYD8ui3hob38gd80tjqFVrzGj9wgNtLXYWUye779nQR42-9qp71xCG9xhNmVEujzMM8SAc1Kh-U=s256" alt="icon">
+          </div>
+        </div>
+        <div class="gc-body">
+          <div class="gc-genre">Simulation</div>
+          <div class="gc-title">Taxi Simulator Car Driving</div>
+          <div class="gc-rating"><span class="gc-new">✨ New Release</span></div>
+          <p class="gc-desc">City taxi driver life — pick up passengers, navigate streets, earn money. Full offline.</p>
+          <button class="gc-btn"><i class="fa-solid fa-eye"></i> See More</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="container">
+    <div class="ft-grid">
+      <div class="ft-brand">
+        <a href="#hero" class="logo">
+          <div class="logo-box"><i class="fa-solid fa-gamepad"></i></div>
+          GAMES<em>CLICK</em>
+        </a>
+        <p class="ft-tagline">Building immersive mobile games from Pakistan to the world. Passion-driven, Unity-powered, player-first.</p>
+        <div class="ft-socials">
+          <a href="mailto:gameeyeshort@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+          <a href="tel:+923474780862" title="Phone"><i class="fa-solid fa-phone"></i></a>
+          <a href="https://play.google.com/store/apps/developer?id=Games+Click" target="_blank" title="Play Store"><i class="fa-brands fa-google-play"></i></a>
+          <a href="https://gamesclickblog.blogspot.com" target="_blank" title="Blog"><i class="fa-solid fa-rss"></i></a>
+        </div>
+      </div>
+      <div class="ft-col">
+        <h5>Quick Links</h5>
+        <ul class="ft-links">
+          <li><a href="#about"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> About Us</a></li>
+          <li><a href="#services"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Services</a></li>
+          <li><a href="#tools"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Tools</a></li>
+          <li><a href="#portfolio"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Portfolio</a></li>
+          <li><a href="https://gamesclickblog.blogspot.com" target="_blank"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Blog</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h5>Our Games</h5>
+        <ul class="ft-links">
+          <li><a href="https://play.google.com/store/apps/details?id=com.gamesclick.cargames.carsimulator.cardriving" target="_blank">Car Simulator Open World</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gamesclick.flightpilot.flightsimulator.airplanegames" target="_blank">Flight Simulator</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gamesclick.crimevegas.gangstergames.mafiagames.actiongames" target="_blank">Gangster Vegas Crime</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gamesclick.trucksimulator.truckgames.vehiclegames" target="_blank">Cargo Truck Simulator</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=com.gamesclick.texidrivinggame.cardrivinggame.texisimulator" target="_blank">Taxi Simulator</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h5>Contact</h5>
+        <div class="ft-contact-item"><i class="fa-solid fa-envelope"></i><a href="mailto:gameeyeshort@gmail.com">gameeyeshort@gmail.com</a></div>
+        <div class="ft-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:+923474780862">+92 347 4780862</a></div>
+        <div class="ft-contact-item"><i class="fa-brands fa-google-play"></i><a href="https://play.google.com/store/apps/developer?id=Games+Click" target="_blank">Google Play Store</a></div>
+        <div class="ft-contact-item"><i class="fa-solid fa-rss"></i><a href="https://gamesclickblog.blogspot.com" target="_blank">Official Blog</a></div>
+        <div class="ft-contact-item"><i class="fa-solid fa-location-dot"></i><span>Pakistan 🇵🇰</span></div>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <p>© 2025 <span>Games Click</span>. All rights reserved.</p>
+      <p>Made with ❤️ in <span>Pakistan 🇵🇰</span> · Powered by <span>Unity 3D</span></p>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL TOP -->
+<button id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Top"><i class="fa-solid fa-chevron-up"></i></button>
+
+<!-- ═══ MODALS ═══ -->
+<!-- Modal 1 -->
+<div class="modal-bg" id="m1" onclick="closeMOut(event,'m1')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeM('m1')"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-head">
+      <div class="modal-icon"><img src="https://play-lh.googleusercontent.com/CrodYYbECbGigKuu12rO6VmRJMt4el4MxhqRS3RVio36ktvsO_TFpMSEBK_1EbkpdJaWUAMyAK1B6sGBvCxumz0=s256" alt=""></div>
+      <div>
+        <div class="modal-title">Car Simulator Open World 3D</div>
+        <div class="modal-badges"><span class="gc-genre">Simulation</span><span class="gc-new">✨ New Release</span><span style="font-size:0.8rem;color:var(--gray3);">Rated 3+</span></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="shots-row">
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/oHUR91Kl7h1vuBqTQpjhIjxN-bU1oQWbq4qgOH51Tu2RQDqUhzPazVA6wktqU6TR0L8=w526-h296" alt=""></div>
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/fwDVTxs9il3QWf1jZ7lQLSP51ZpxXiGNRVyrDYHItkOLYyxxin0pSXdBYcmnWMxYydY=w526-h296" alt=""></div>
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/OCubicu3wwQjW0gyQqAr_q5HTmpJDjfPppQc-EjBAfhByLeGB18SAFgz10qI4jHaTGA=w526-h296" alt=""></div>
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/VJxCmg-c_tyyg5WpkGfpr5DGxYJ8oJnKrWwnhp714B_sa25equI4SoXeX3xuESOEmzav=w526-h296" alt=""></div>
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/IrnqKh8u8yzlggHAruyuptDxqftaal2QSdJ7GlnyXvra3Vp1gnbFoajcP6ogo3UzyFg=w526-h296" alt=""></div>
+      </div>
+      <div class="modal-section-title">About This Game</div>
+      <p class="modal-desc-text">Car Simulator Open World 3D is the ultimate open world driving simulator where you explore a massive city, drive multiple vehicles, and enjoy realistic gameplay completely offline. While driving, you receive phone calls with exciting missions — accept them for challenges or reject them to continue free roaming.</p>
+      <div class="modal-section-title">Key Features</div>
+      <div class="feature-grid">
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Massive open-world city</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Cars, bikes, trucks & buses</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Realistic physics & controls</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Phone call mission system</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Free roam driving mode</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> 100% offline gameplay</div>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.gamesclick.cargames.carsimulator.cardriving" target="_blank" class="modal-dl"><i class="fa-brands fa-google-play"></i> Download on Google Play</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2 -->
+<div class="modal-bg" id="m2" onclick="closeMOut(event,'m2')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeM('m2')"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-head">
+      <div class="modal-icon"><img src="https://play-lh.googleusercontent.com/5Gke2mNpGNsHnWBWP6gCUSOlz2ddTd4Rfib6TaxalffB-c3nEUJDZBYoztVnY-9n_N8=s256" alt=""></div>
+      <div>
+        <div class="modal-title">Flight Simulator: Plane Games</div>
+        <div class="modal-badges"><span class="gc-genre">Simulation</span><span style="color:var(--gold);font-size:0.85rem;">★ 4.0 Rating</span></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="shots-row">
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/uUK3ZyclJAGjY2IjOV-vdBViDI07AB0FSZ_vfJwaC5dIDFMf8gq91NerBdU0qp5E8oQkrwyLyryw0spKMFxQDg=w526-h296" alt=""></div>
+      </div>
+      <div class="modal-section-title">About This Game</div>
+      <p class="modal-desc-text">Experience the most realistic Flight Simulator on mobile! Fly anywhere with worldwide airports, cities, and runways. Choose from passenger airliners, supersonic jets, and cargo planes. Master takeoff and landing across real airports, tackle emergency missions, and manage your own airline.</p>
+      <div class="modal-section-title">Key Features</div>
+      <div class="feature-grid">
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Global open-world flight</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Multiple plane types</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Emergency landing missions</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Real cockpit instruments</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Dynamic weather system</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Day-night cycle & ATC</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Airline management</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> 100% offline gameplay</div>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.gamesclick.flightpilot.flightsimulator.airplanegames" target="_blank" class="modal-dl"><i class="fa-brands fa-google-play"></i> Download on Google Play</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 3 -->
+<div class="modal-bg" id="m3" onclick="closeMOut(event,'m3')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeM('m3')"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-head">
+      <div class="modal-icon"><img src="https://play-lh.googleusercontent.com/Kg_gabwOgpE4kz58iHTwe-pCgN8nBop-s8PIBC1NiMSvFuxRVkRnXQXvLH3DGRlMfw=s256" alt=""></div>
+      <div>
+        <div class="modal-title">Open World Gangster Vegas Crime</div>
+        <div class="modal-badges"><span class="gc-genre action">Action</span><span style="color:var(--gold);font-size:0.85rem;">★ 3.9</span><span style="font-size:0.8rem;color:var(--gray3);">10K+ Downloads · 18+</span></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="shots-row">
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/Bwibm7wd11gdUhx1vjq3zySciOzcBXPk8DFuDB9vQKuAMTDPX0SUeCHT7B074dsPofNl=w526-h296" alt=""></div>
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/C-0pQF1ohc4r8LoctseUA9vUVlu4qtMtZajhpt3tIa3NNmwG2kFIUWDpitP_JdPZobA=w526-h296" alt=""></div>
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/hSmP-x4_qVIbzv1gatWxMGHD9DtIpdQVUxer4INF2ETjsxH9m0RyejgVJHPjqoCq9tA=w526-h296" alt=""></div>
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/2tUExmLvI5US4sz0qECA7zqVzWQPlP_z--LRZy-0tfISo8uPrTyhjU65-qwKYg-CqN0=w526-h296" alt=""></div>
+        <div class="shot"><img src="https://play-lh.googleusercontent.com/n0KsOYXDzCO-yqGANmMl0cp5kUKlRkleaXhgCLqTBXGqC3ndLC3XQVqgkOFBueX_UQU=w526-h296" alt=""></div>
+      </div>
+      <div class="modal-section-title">About This Game</div>
+      <p class="modal-desc-text">Welcome to the dangerous streets of Gangstar Vegas — where crime games take you deep into the underworld of power and survival. Play as Harry, a fearless street boss with nothing to lose. Build your criminal empire through 5 action-packed missions across an immersive Miami-style open world.</p>
+      <div class="modal-section-title">Key Features</div>
+      <div class="feature-grid">
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> 5 open-world missions</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Cars, bikes, helicopters</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Steal any car on the street</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Live map tracking</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Open garage upgrades</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Miami-style city world</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Fight rival mafia gangs</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> RP-style open world</div>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.gamesclick.crimevegas.gangstergames.mafiagames.actiongames" target="_blank" class="modal-dl"><i class="fa-brands fa-google-play"></i> Download on Google Play</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 4 -->
+<div class="modal-bg" id="m4" onclick="closeMOut(event,'m4')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeM('m4')"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-head">
+      <div class="modal-icon"><img src="https://play-lh.googleusercontent.com/PDahMCIqfZAWHieEO575qNNwpWjrYekIT3UFjvTsjQy7IfHTP5_IiGr60ztbybrGAQ=s256" alt=""></div>
+      <div>
+        <div class="modal-title">Cargo Truck Simulator Game</div>
+        <div class="modal-badges"><span class="gc-genre">Simulation</span><span style="color:var(--gold);font-size:0.85rem;">★ 3.7 Rating</span></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title">About This Game</div>
+      <p class="modal-desc-text">Cargo Truck Simulator puts you behind the wheel of powerful heavy trucks. Navigate challenging roads and deliver cargo safely to earn rewards. Multiple truck models, realistic physics, and immersive delivery missions across varied road environments — the ultimate truck driving experience on Android.</p>
+      <div class="modal-section-title">Key Features</div>
+      <div class="feature-grid">
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Multiple heavy truck models</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Realistic truck physics</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Cargo delivery missions</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Various road environments</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Detailed cabin interiors</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> 100% offline gameplay</div>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.gamesclick.trucksimulator.truckgames.vehiclegames" target="_blank" class="modal-dl"><i class="fa-brands fa-google-play"></i> Download on Google Play</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 5 -->
+<div class="modal-bg" id="m5" onclick="closeMOut(event,'m5')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeM('m5')"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-head">
+      <div class="modal-icon"><img src="https://play-lh.googleusercontent.com/vGysKoSVIXY4cYD8ui3hob38gd80tjqFVrzGj9wgNtLXYWUye779nQR42-9qp71xCG9xhNmVEujzMM8SAc1Kh-U=s256" alt=""></div>
+      <div>
+        <div class="modal-title">Taxi Simulator Car Driving</div>
+        <div class="modal-badges"><span class="gc-genre">Simulation</span><span class="gc-new">✨ New Release</span></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title">About This Game</div>
+      <p class="modal-desc-text">Taxi Simulator Car Driving puts you in the role of a professional city taxi driver. Navigate through busy streets, pick up passengers, and deliver them on time. Earn money, upgrade your taxi, and master the roads of a living city — all fully offline.</p>
+      <div class="modal-section-title">Key Features</div>
+      <div class="feature-grid">
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Realistic city environment</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Multiple taxi vehicles</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Passenger pickup missions</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> City traffic navigation</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> Earn & upgrade system</div>
+        <div class="feat"><i class="fa-solid fa-check-circle"></i> 100% offline gameplay</div>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.gamesclick.texidrivinggame.cardrivinggame.texisimulator" target="_blank" class="modal-dl"><i class="fa-brands fa-google-play"></i> Download on Google Play</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// Navbar
+const nav = document.getElementById('nav');
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('solid', window.scrollY > 40);
+  toTop.classList.toggle('show', window.scrollY > 400);
+});
+
+// Hamburger
+const hbg = document.getElementById('hbg');
+const mobNav = document.getElementById('mobNav');
+hbg.addEventListener('click', () => { hbg.classList.toggle('open'); mobNav.classList.toggle('open'); });
+function closeMob() { hbg.classList.remove('open'); mobNav.classList.remove('open'); }
+
+// Active nav
+const secs = document.querySelectorAll('section[id], footer[id]');
+const navAs = document.querySelectorAll('.nav-links a');
+new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) navAs.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id); });
+  });
+}, { threshold: 0.3 }).observe(document.querySelectorAll('section, footer')[0]) || secs.forEach(s => new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) navAs.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id)); });
+}, { threshold: 0.3 }).observe(s));
+
+// Reveal
+const rvls = document.querySelectorAll('.reveal');
+new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); } });
+}, { threshold: 0.1 }).observe(rvls[0]);
+rvls.forEach(el => new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.1 }).observe(el));
+
+// Modals
+function openM(id) { document.getElementById(id).classList.add('show'); document.body.style.overflow = 'hidden'; }
+function closeM(id) { document.getElementById(id).classList.remove('show'); document.body.style.overflow = ''; }
+function closeMOut(e, id) { if (e.target === document.getElementById(id)) closeM(id); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal-bg.show').forEach(m => { m.classList.remove('show'); document.body.style.overflow = ''; }); });
+</script>
+</body>
+</html>
